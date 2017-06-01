@@ -32,9 +32,9 @@ while True:
 
     faces = faceCascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30)
+        scaleFactor=1.1,        # image reduction size at each scale
+        minNeighbors=5,         # number of neighbors each ROI should retain
+        minSize=(30, 30)        # objects smaller than this are ignored
     )
 
     # draw a rectangle around the faces
@@ -53,6 +53,7 @@ while True:
 
         # save to temp file
         result.save(fname);
+        # result.save(cStringIO, format='PNG')
 
         # dump file as base64 string
         with open(fname, 'rb') as f:
