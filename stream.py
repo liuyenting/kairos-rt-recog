@@ -7,7 +7,6 @@
 # http://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-
 # opencv/
 
-# import the necessary packages
 from threading import Thread
 import cv2
 
