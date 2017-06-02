@@ -1,6 +1,7 @@
 # WebcamVideoStream
 #
-# Encompass the actual camera acquisition thread.
+# Encompass the actual camera acquisition thread. All the frames are pushed into
+# a ring buffer for retrieval.
 #
 # Reference
 # ---------
@@ -9,37 +10,47 @@
 
 from threading import Thread
 import cv2
+from rbuf import RingBuffer
 
 class WebcamVideoStream:
     def __init__(self, src=0):
-        # initialize the video camera stream and read the first frame
-        # from the stream
-        self.stream = cv2.VideoCapture(src)
-        (self.grabbed, self.frame) = self.stream.read()
+        """
+        Init the video camera, the ring buffer and read the first frame.
+        """
+        self._buffer = RingBuffer()
 
-        # initialize the variable used to indicate if the thread should
-        # be stopped
-        self.stopped = False
+        self.stream = cv2.VideoCapture(src)
+        (retval, frame) = self.stream.read()
+        self._buffer.push(frame)
+
+        # variable used to indicate if the thread should be stopped
+        self._stopped = False
 
     def start(self):
-        # start the thread to read frames from the video stream
+        """
+        Start the thread to read frames from the video stream.
+        """
         Thread(target=self.update, args=()).start()
         return self
 
     def update(self):
-        # keep looping infinitely until the thread is stopped
-        while True:
-            # if the thread indicator variable is set, stop the thread
-            if self.stopped:
-                return
-
-            # otherwise, read the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
+        """
+        Keep looping infinitely until the thread is stopped.
+        """
+        while not self._stopped:
+            # read the next frame from the stream
+            (retval, frame) = self.stream.read()
+            # push into the buffer
+            self._buffer.push(frame)
 
     def read(self):
-        # return the frame most recently read
-        return self.frame
+        """
+        Return the frame most recently read.
+        """
+        return self._buffer.pop()
 
     def stop(self):
-        # indicate that the thread should be stopped
-        self.stopped = True
+        """
+        Indicate that the thread should be stopped.
+        """
+        self._stopped = True
