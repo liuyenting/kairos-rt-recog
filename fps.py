@@ -39,4 +39,5 @@ class FPS:
 
     def fps(self):
         # compute the (approximate) frames per second
+        #TODO: modify to allow continuous query
         return self._numFrames / self.elapsed()

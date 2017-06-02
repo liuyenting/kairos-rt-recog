@@ -10,7 +10,7 @@ import signal
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-n", "--num-frames", type=int, default=100,
-    help="# of frames to loop over for FPS test"
+    help="# of frames to loop over"
 )
 parser.add_argument(
     '-d', '--display', action='store_true',
@@ -29,7 +29,6 @@ cv2.resizeWindow('Live Stream', 640, 360)
 stream = WebcamVideoStream(src=0).start()
 fps = FPS().start()
 
-# loop over some frames...this time using the threaded stream
 while fps._numFrames < args["num_frames"]:
 	# grab the frame from the threaded video stream and resize it
 	# to have a maximum width of 400 pixels
@@ -37,8 +36,9 @@ while fps._numFrames < args["num_frames"]:
 	#frame = imutils.resize(frame, width=400)
 
 	# check to see if the frame should be displayed to our screen
-	if args['display'] > 0:
+	if args['display']:
 		cv2.imshow('Live Stream', frame)
+        # delay 1ms, maximum of 100FPS
 		key = cv2.waitKey(1) & 0xFF
 
 	# update the FPS counter

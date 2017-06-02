@@ -20,7 +20,7 @@ class WebcamVideoStream:
         self._buffer = RingBuffer()
 
         self.stream = cv2.VideoCapture(src)
-        (retval, frame) = self.stream.read()
+        (_, frame) = self.stream.read()
         self._buffer.push(frame)
 
         # variable used to indicate if the thread should be stopped
@@ -39,7 +39,7 @@ class WebcamVideoStream:
         """
         while not self._stopped:
             # read the next frame from the stream
-            (retval, frame) = self.stream.read()
+            (_, frame) = self.stream.read()
             # push into the buffer
             self._buffer.push(frame)
 
