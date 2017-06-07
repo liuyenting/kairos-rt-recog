@@ -13,11 +13,11 @@ import cv2
 
 class FaceIdentifier:
     def __init__(self, path):
+        print('[INFO] loading pre-trained "%s"' % (path))
         self._classifier = cv2.CascadeClassifier(path)
 
         # ROI boundary box
         self.minSize = (50, 50)
-        self.maxSize = (200, 200)
 
     def findFaces(self, image):
         # convert to grayscale for further processing
@@ -28,9 +28,9 @@ class FaceIdentifier:
             gray,
             scaleFactor=1.1,
             minNeighbors=5,
-            minSize=self.minSize,
-            maxSize=self.maxSize
+            minSize=self.minSize
         )
+        return faces
 
     def drawROI(self, image, roi):
         # draw a rectangle around the faces

@@ -19,8 +19,6 @@ parser.add_argument(
 args = vars(parser.parse_args())
 
 cv2.namedWindow('Live Stream', cv2.WINDOW_NORMAL)
-#TODO window resize is not working
-cv2.resizeWindow('Live Stream', 640, 360)
 
 classifier = FaceIdentifier(args['classifier'])
 stream = WebcamVideoStream(src=0).start()
@@ -31,8 +29,13 @@ while True:
         # grab a frame
         frame = stream.read()
 
+        # analyze the faces
+        faces = classifier.findFaces(frame)
+
         if args['display']:
-            # get the size
+            if faces is not None:
+                classifier.drawROI(frame, faces)
+
             height, width = frame.shape[:2]
             # shrink the frame, since non-Qt backend cannot accept window resize
             frame = cv2.resize(
