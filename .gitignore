@@ -1,3 +1,6 @@
+# compiled object
+*.pyc
+
 # test data
 template/
 test_set/
