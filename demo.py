@@ -13,10 +13,6 @@ parser.add_argument(
 )
 args = vars(parser.parse_args())
 
-# created a *threaded* video stream, allow the camera sensor to warmup,
-# and start the FPS counter
-print("[INFO] sampling THREADED frames from webcam...")
-
 cv2.namedWindow('Live Stream', cv2.WINDOW_NORMAL)
 #TODO window resize is not working
 cv2.resizeWindow('Live Stream', 640, 360)
@@ -26,15 +22,13 @@ fps = FPS().start()
 
 while True:
     try:
-        # grab the frame from the threaded video stream and resize it
-        # to have a maximum width of 400 pixels
+        # grab a frame
         frame = stream.read()
 
-        # check to see if the frame should be displayed to our screen
         if args['display']:
             # get the size
             height, width = frame.shape[:2]
-            # shrink the display
+            # shrink the frame, since non-Qt backend cannot accept window resize
             frame = cv2.resize(
                 frame,
                 (width/2, height/2),
@@ -42,8 +36,6 @@ while True:
             )
 
             cv2.imshow('Live Stream', frame)
-            # delay 10ms, maximum of 100FPS
-            key = cv2.waitKey(10) & 0xFF
 
         # update the FPS counter
         fps.update()
