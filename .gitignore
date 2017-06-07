@@ -1,6 +1,10 @@
 # compiled object
 *.pyc
 
+# credentials
+*.ini
+!sample_cred.ini
+
 # test data
 template/
 test_set/
