@@ -3,7 +3,7 @@ import requests
 import base64
 import json
 
-dataDir = 'template'
+dataDir = '/Volumes/YTLIU_BLACK/'
 
 url = 'https://api.kairos.com/enroll';
 appId = '420de94a';
@@ -17,15 +17,13 @@ headers = {
 
 # list files in current directory
 for f in os.listdir(dataDir):
-    if f.endswith('.png'):
+    if f.endswith('.jpg'):
         path = os.path.join(dataDir, f)
         print(path)
 
-        # name
+        # student ID
         fname, fext = os.path.splitext(path)
         name = os.path.basename(fname)
-        # remove illegal character
-        name = name.replace('_', '-')
 
         # dump file as base64 string
         with open(path, 'rb') as f:
@@ -33,9 +31,9 @@ for f in os.listdir(dataDir):
 
         # generate the post fields
         values = {
-            'image': 'data:image/png;base64,' + imstr,
+            'image': 'data:image/jpg;base64,' + imstr,
             'subject_id': name,
-            'gallery_name': 'AKB48'
+            'gallery_name': 'CNLab-Team12'
         }
 
         # send the request
