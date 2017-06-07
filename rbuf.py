@@ -17,27 +17,18 @@ class RingBuffer(object):
             """
             Adds data to the end of the buffer.
             """
-            self._buffer.extend(data)
+            self._buffer.append(data)
 
-    def pop(self, size=1):
+    def pop(self):
             """
             Retrieves data from the beginning of the buffer.
             """
-            if size > len(self._buffer):
-                raise IndexError(
-                    "Too many items: trying to access %d items from a buffer "
-                    "of length %d" % (size, len(self))
-                )
-            data = [self._buffer.popleft() for _ in xrange(size)]
-            return data
+            if len(self):
+                return self._buffer.popleft()
+            else:
+                raise IndexError("Buffer is empty")
 
-    def peek(self, size=1):
-            """
-            Peek at the beginning of the buffer.
-            """
-            return str(bytearray(itertools.islice(self._buffer, size)))
-
-    def length(self):
+    def __len__(self):
             """
             Returns the length of the buffer.
             """

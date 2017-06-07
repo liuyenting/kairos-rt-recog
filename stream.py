@@ -20,8 +20,8 @@ class WebcamVideoStream:
         self._buffer = RingBuffer()
 
         self.stream = cv2.VideoCapture(src)
-        (_, frame) = self.stream.read()
-        self._buffer.push(frame)
+        #(_, frame) = self.stream.read()
+        #self._buffer.push(frame)
 
         # variable used to indicate if the thread should be stopped
         self._stopped = False
@@ -43,11 +43,16 @@ class WebcamVideoStream:
             # push into the buffer
             self._buffer.push(frame)
 
-    def read(self):
+    def read(self, block=True):
         """
         Return the frame most recently read.
         """
-        return self._buffer.pop()
+        while True:
+            try:
+                return self._buffer.pop()
+            except IndexError:
+                if not block:
+                    return None
 
     def stop(self):
         """

@@ -1,19 +1,14 @@
-# import the necessary packages
 from __future__ import print_function
+import argparse
+from time import sleep
+import cv2
 from stream import WebcamVideoStream
 from fps import FPS
-import argparse
-import cv2
-import signal
 
 # construct the argument parse and parse the arguments
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "-n", "--num-frames", type=int, default=100,
-    help="# of frames to loop over"
-)
-parser.add_argument(
-    '-d', '--display', action='store_true',
+    '-d', '--display', action='store_true', default=False,
     help='Whether or not frames should be displayed'
 )
 args = vars(parser.parse_args())
@@ -29,20 +24,33 @@ cv2.resizeWindow('Live Stream', 640, 360)
 stream = WebcamVideoStream(src=0).start()
 fps = FPS().start()
 
-while fps._numFrames < args["num_frames"]:
-	# grab the frame from the threaded video stream and resize it
-	# to have a maximum width of 400 pixels
-	frame = stream.read()
-	#frame = imutils.resize(frame, width=400)
+while True:
+    try:
+        # grab the frame from the threaded video stream and resize it
+        # to have a maximum width of 400 pixels
+        frame = stream.read()
 
-	# check to see if the frame should be displayed to our screen
-	if args['display']:
-		cv2.imshow('Live Stream', frame)
-        # delay 1ms, maximum of 100FPS
-		key = cv2.waitKey(1) & 0xFF
+        # check to see if the frame should be displayed to our screen
+        if args['display']:
+            # get the size
+            height, width = frame.shape[:2]
+            # shrink the display
+            frame = cv2.resize(
+                frame,
+                (width/2, height/2),
+                interpolation = cv2.INTER_CUBIC
+            )
 
-	# update the FPS counter
-	fps.update()
+            cv2.imshow('Live Stream', frame)
+            # delay 10ms, maximum of 100FPS
+            key = cv2.waitKey(10) & 0xFF
+
+        # update the FPS counter
+        fps.update()
+    except KeyboardInterrupt:
+        break
+
+print('Ctrl+C captured, stopping acquisition...')
 
 # stop the timer and display FPS information
 fps.stop()

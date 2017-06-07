@@ -16,7 +16,7 @@ class FPS:
         # that were examined between the start and end intervals
         self._start = None
         self._end = None
-        self._numFrames = 0
+        self._nFrames = 0
 
     def start(self):
         # start the timer
@@ -30,7 +30,7 @@ class FPS:
     def update(self):
         # increment the total number of frames examined during the
         # start and end intervals
-        self._numFrames += 1
+        self._nFrames += 1
 
     def elapsed(self):
         # return the total number of seconds between the start and
@@ -40,4 +40,4 @@ class FPS:
     def fps(self):
         # compute the (approximate) frames per second
         #TODO: modify to allow continuous query
-        return self._numFrames / self.elapsed()
+        return self._nFrames / self.elapsed()
