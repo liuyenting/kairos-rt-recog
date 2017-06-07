@@ -1,10 +1,11 @@
 from __future__ import print_function
 import argparse
+from datetime import datetime
 from time import sleep
 import cv2
 from fps import FPS
 from stream import WebcamVideoStream
-from identifier import FaceIdentifier
+from identifier import FaceIdentifier, NameIdentifier
 
 # construct the argument parse and parse the arguments
 parser = argparse.ArgumentParser()
@@ -20,7 +21,10 @@ args = vars(parser.parse_args())
 
 cv2.namedWindow('Live Stream', cv2.WINDOW_NORMAL)
 
+# identifiers
 classifier = FaceIdentifier(args['classifier'])
+kairos = NameIdentifier('jhopo_cred.ini')
+# camera
 stream = WebcamVideoStream(src=0).start()
 fps = FPS().start()
 
@@ -31,6 +35,16 @@ while True:
 
         # analyze the faces
         faces = classifier.findFaces(frame)
+
+        # crop the faces
+        if faces is not None:
+            for (x, y, w, h) in faces:
+                # slice the ROI
+                face = frame[y:y+h, x:x+w]
+
+                # send to Kairos
+                result = kairos.identify(face)
+                print('%s "%s"' % (str(datetime.now()), result))
 
         if args['display']:
             if faces is not None:

@@ -60,3 +60,9 @@ class WebcamVideoStream:
         Indicate that the thread should be stopped.
         """
         self._stopped = True
+
+    def __exit__(self, type, value, traceback):
+        """
+        Release the camera resource.
+        """
+        self.stream.release()
