@@ -26,7 +26,7 @@ class RingBuffer(object):
             if len(self):
                 return self._buffer.popleft()
             else:
-                raise IndexError("Buffer is empty")
+                raise IndexError('Buffer is empty')
 
     def __len__(self):
             """
