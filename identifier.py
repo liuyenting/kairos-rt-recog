@@ -67,6 +67,8 @@ class NameIdentifier:
         # load the credentials
         appId = config.get('Kairos', 'AppId')
         appKey = config.get('Kairos', 'AppKey')
+        # load the templates
+        self._gallery = config.get('Kairos', 'Gallery')
 
         print('[DEBUG] AppId = [%s]' % (appId))
         print('[DEBUG] AppKey = [%s]' % (appKey))
@@ -137,7 +139,7 @@ class NameIdentifier:
         # generate the post fields
         values = {
             'image': 'data:image/png;base64,' + imgStr,
-            'gallery_name': 'CNLab-Team12'
+            'gallery_name': self._gallery
         }
         # send the request
         response = requests.post(
