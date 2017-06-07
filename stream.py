@@ -1,7 +1,8 @@
-# WebcamVideoStream
+# stream.py
 #
-# Encompass the actual camera acquisition thread. All the frames are pushed into
-# a ring buffer for retrieval.
+# WebcamVideoStream
+#   Encompass the actual camera acquisition thread. All the frames are pushed
+#   into a ring buffer for retrieval.
 #
 # Reference
 # ---------
