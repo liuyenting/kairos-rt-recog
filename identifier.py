@@ -78,7 +78,7 @@ class NameIdentifier:
             'app_key': appKey
         }
 
-        self._buffer = RingBuffer(size=4)
+        self._buffer = RingBuffer(size=2)
         # variable used to indicate if the thread should be stopped
         self._stopped = False
 
@@ -106,13 +106,19 @@ class NameIdentifier:
 
                 # ask Kairos
                 state, sid = self._identify(face)
-                if state == KairosResponse.NO_FACE:
+                if state == KairosResponse.SUCCESS:
+                    # send to the signup sheet server
+                    response = requests.post(
+                        'http://172.16.217.90/signup.php',
+                        data={'student_id': sid}
+                    )
+                    sid = '[' + sid + ']'
+                elif state == KairosResponse.NO_FACE:
                     sid = '<no face>'
                 elif state == KairosResponse.UNKNOWN:
                     sid = '<unknown>'
-                print('%s "%s"' % (str(datetime.now()), sid))
 
-                #TODO send to the signup sheet server
+                print('%s %s' % (str(datetime.now()), sid))
             except IndexError:
                 pass
 
