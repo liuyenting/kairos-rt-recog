@@ -36,6 +36,8 @@ while True:
             )
 
             cv2.imshow('Live Stream', frame)
+            # throttle at 100FPS, aka 10ms delay
+            cv2.waitKey(10)
 
         # update the FPS counter
         fps.update()
