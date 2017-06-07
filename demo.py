@@ -1,6 +1,5 @@
 from __future__ import print_function
 import argparse
-from datetime import datetime
 from time import sleep
 import cv2
 from fps import FPS
@@ -23,7 +22,7 @@ cv2.namedWindow('Live Stream', cv2.WINDOW_NORMAL)
 
 # identifiers
 classifier = FaceIdentifier(args['classifier'])
-kairos = NameIdentifier('jhopo_cred.ini')
+kairos = NameIdentifier('jhopo_cred.ini').start()
 # camera
 stream = WebcamVideoStream(src=0).start()
 fps = FPS().start()
@@ -31,7 +30,7 @@ fps = FPS().start()
 while True:
     try:
         # grab a frame
-        frame = stream.read()
+        frame = stream.read(block=True)
 
         # analyze the faces
         faces = classifier.findFaces(frame)
@@ -41,10 +40,8 @@ while True:
             for (x, y, w, h) in faces:
                 # slice the ROI
                 face = frame[y:y+h, x:x+w]
-
                 # send to Kairos
-                result = kairos.identify(face)
-                print('%s "%s"' % (str(datetime.now()), result))
+                kairos.queryID(face)
 
         if args['display']:
             if faces is not None:
@@ -74,6 +71,6 @@ fps.stop()
 print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
-# do a bit of cleanup
-cv2.destroyAllWindows()
 stream.stop()
+kairos.stop()
+cv2.destroyAllWindows()

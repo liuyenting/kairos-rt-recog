@@ -44,7 +44,7 @@ class WebcamVideoStream:
             # push into the buffer
             self._buffer.push(frame)
 
-    def read(self, block=True):
+    def read(self, block=False):
         """
         Return the frame most recently read.
         """

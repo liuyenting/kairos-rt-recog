@@ -9,11 +9,14 @@
 from __future__ import print_function
 import cv2
 from PIL import Image
+from rbuf import RingBuffer
 from ConfigParser import ConfigParser
+from threading import Thread
 import cStringIO
 import base64
 import requests
 import json
+from datetime import datetime
 
 class FaceIdentifier:
     def __init__(self, path):
@@ -21,7 +24,7 @@ class FaceIdentifier:
         self._classifier = cv2.CascadeClassifier(path)
 
         # ROI boundary box
-        self.minSize = (50, 50)
+        self.minSize = (100, 100)
 
     def findFaces(self, image):
         """
@@ -53,6 +56,9 @@ class FaceIdentifier:
                 2               # line thickness
             )
 
+class KairosResponse:
+    SUCCESS, UNKNOWN, NO_FACE = range(3)
+
 class NameIdentifier:
     def __init__(self, path):
         config = ConfigParser()
@@ -62,6 +68,9 @@ class NameIdentifier:
         appId = config.get('Kairos', 'AppId')
         appKey = config.get('Kairos', 'AppKey')
 
+        print('[DEBUG] AppId = [%s]' % (appId))
+        print('[DEBUG] AppKey = [%s]' % (appKey))
+
         # preset the POST header
         self._headers = {
             'Content-Type': 'application/json',
@@ -69,22 +78,60 @@ class NameIdentifier:
             'app_key': appKey
         }
 
-    def identify(self, face):
+        self._buffer = RingBuffer(size=4)
+        # variable used to indicate if the thread should be stopped
+        self._stopped = False
+
+    def start(self):
+        """
+        Start the identification service.
+        """
+        Thread(target=self.worker, args=()).start()
+        return self
+
+    def queryID(self, face):
+        """
+        Query the student ID for specified face.
+        """
+        self._buffer.push(face)
+
+    def worker(self):
+        """
+        Keep pop out the face from buffer.
+        """
+        while not self._stopped:
+            try:
+                # pop a new face
+                face = self._buffer.pop()
+
+                # ask Kairos
+                state, sid = self._identify(face)
+                if state == KairosResponse.NO_FACE:
+                    sid = '<no face>'
+                elif state == KairosResponse.UNKNOWN:
+                    sid = '<unknown>'
+                print('%s "%s"' % (str(datetime.now()), sid))
+
+                #TODO send to the signup sheet server
+            except IndexError:
+                pass
+
+    def _identify(self, face):
         # create buffer for faces
-        self._buffer = cStringIO.StringIO()
+        fileBuf = cStringIO.StringIO()
 
         # acquire Image object
         imgObj = Image.fromarray(face, 'RGB')
         # dump to the buffer as PNG
-        imgObj.save(self._buffer, format='PNG')
+        imgObj.save(fileBuf, format='PNG')
 
         # encode to base64 for transfer
-        imgStr = base64.b64encode(self._buffer.getvalue())
+        imgStr = base64.b64encode(fileBuf.getvalue())
 
         # generate the post fields
         values = {
             'image': 'data:image/png;base64,' + imgStr,
-            'gallery_name': 'AKB48'
+            'gallery_name': 'CNLab-Team12'
         }
         # send the request
         response = requests.post(
@@ -94,14 +141,27 @@ class NameIdentifier:
         )
 
         # close object and discard memory buffer
-        self._buffer.close()
+        fileBuf.close()
 
         # parse the JSON result
         result = json.loads(response.text)
+
         # return the name
+        sid = None
+        state = None
         if 'images' in result:
             result = result['images'][0]['transaction']
             if 'subject_id' in result:
-                return result['subject_id']
+                state = KairosResponse.SUCCESS
+                sid = result['subject_id']
+            else:
+                state = KairosResponse.UNKNOWN
         else:
-            return None
+            state = KairosResponse.NO_FACE
+        return (state, sid)
+
+    def stop(self):
+        """
+        Stop the query thread.
+        """
+        self._stopped = True
