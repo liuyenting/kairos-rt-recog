@@ -13,6 +13,7 @@ from ConfigParser import ConfigParser
 import cStringIO
 import base64
 import requests
+import json
 
 class FaceIdentifier:
     def __init__(self, path):
