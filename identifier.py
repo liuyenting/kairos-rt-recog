@@ -1,15 +1,14 @@
-# WebcamVideoStream
+# identifier.py
 #
-# Encompass the actual camera acquisition thread. All the frames are pushed into
-# a ring buffer for retrieval.
+# FaceIdentifier
+#   Identify possible faces in the image.
 #
-# Reference
-# ---------
-# http://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-
-# opencv/
+# NameIdentifier
+#   Send the image to Kairos in order to identify its possible name.
 
 from __future__ import print_function
 import cv2
+from ConfigParser import ConfigParser
 
 class FaceIdentifier:
     def __init__(self, path):
@@ -42,3 +41,9 @@ class FaceIdentifier:
                 (0, 255, 0),    # border color
                 2               # line thickness
             )
+
+class NameIdentifier:
+    def __init__(self, path):
+        # parse config file to look for credentials
+        config = ConfigParser()
+        config.read(path)
