@@ -2,8 +2,9 @@ from __future__ import print_function
 import argparse
 from time import sleep
 import cv2
-from stream import WebcamVideoStream
 from fps import FPS
+from stream import WebcamVideoStream
+from identifier import FaceIdentifier
 
 # construct the argument parse and parse the arguments
 parser = argparse.ArgumentParser()
@@ -11,12 +12,17 @@ parser.add_argument(
     '-d', '--display', action='store_true', default=False,
     help='Whether or not frames should be displayed'
 )
+parser.add_argument(
+    '-c', '--classifier', default='haarcascade_frontalface_default.xml',
+    help='Pre-trained cascade classifier definition'
+)
 args = vars(parser.parse_args())
 
 cv2.namedWindow('Live Stream', cv2.WINDOW_NORMAL)
 #TODO window resize is not working
 cv2.resizeWindow('Live Stream', 640, 360)
 
+classifier = FaceIdentifier(args['classifier'])
 stream = WebcamVideoStream(src=0).start()
 fps = FPS().start()
 
