@@ -81,9 +81,9 @@ class NameIdentifier:
             'app_key': appKey
         }
 
-        self._buffer = RingBuffer(size=None)
+        self._buffer = RingBuffer(size=8)
         # similarity threshold
-        self._threshold = 0.4
+        self._threshold = 0.3
         # variable used to indicate if the thread should be stopped
         self._stopped = False
 
@@ -110,7 +110,7 @@ class NameIdentifier:
         histIn = cv2.calcHist([face], [0], None, [256], [0,256])
         histIn = cv2.normalize(histIn).flatten()
 
-        dMax = -1
+        dMax = 0
         for faceWait in self._buffer.snapshot():
             histWait = cv2.calcHist([faceWait], [0], None, [256], [0,256])
             histWait = cv2.normalize(histWait).flatten()
