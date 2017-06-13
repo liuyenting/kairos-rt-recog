@@ -110,7 +110,7 @@ class NameIdentifier:
         histIn = cv2.calcHist([face], [0], None, [256], [0,256])
         histIn = cv2.normalize(histIn).flatten()
 
-        for faceWait in self._buffer:
+        for faceWait in self._buffer.snapshot():
             histWait = cv2.calcHist([faceWait], [0], None, [256], [0,256])
             histWait = cv2.normalize(histWait).flatten()
             # histogram difference using cross-correlation

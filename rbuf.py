@@ -28,11 +28,8 @@ class RingBuffer(object):
             else:
                 raise IndexError('Buffer is empty')
 
-    def __iter__(self):
-        return self._buffer.__iter__
-
-    def __next__(self):
-        return self._buffer.__next__
+    def snapshot(self):
+        return list(self._buffer)
 
     def __len__(self):
             """
