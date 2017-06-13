@@ -80,7 +80,7 @@ class NameIdentifier:
             'app_key': appKey
         }
 
-        self._buffer = RingBuffer(size=2)
+        self._buffer = RingBuffer(size=None)
         # similarity threshold
         self._threshold = 0.4
         # variable used to indicate if the thread should be stopped
