@@ -99,9 +99,8 @@ class NameIdentifier:
         """
         result, score = self._isSimilar(face)
         if not result:
+            print('[DEBUG] new face (score = %.2f)' % (score))
             self._buffer.push(face)
-        else:
-            print('[DEBUG] similary face detected, score = %.2f' % (score))
 
     def _isSimilar(self, face):
         """
@@ -110,6 +109,7 @@ class NameIdentifier:
         histIn = cv2.calcHist([face], [0], None, [256], [0,256])
         histIn = cv2.normalize(histIn).flatten()
 
+        dMax = -1
         for faceWait in self._buffer.snapshot():
             histWait = cv2.calcHist([faceWait], [0], None, [256], [0,256])
             histWait = cv2.normalize(histWait).flatten()
@@ -117,7 +117,9 @@ class NameIdentifier:
             d = cv2.compareHist(histWait, histIn, cv2.cv.CV_COMP_CORREL)
             if d > self._threshold:
                 return True, d
-        return False, 0
+            if d > dMax
+                dMax = d
+        return False, dMax
 
     def worker(self):
         """
