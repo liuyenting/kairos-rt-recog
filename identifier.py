@@ -17,6 +17,7 @@ import base64
 import requests
 import json
 from datetime import datetime
+import os
 
 class FaceIdentifier:
     def __init__(self, path):
@@ -186,6 +187,7 @@ class NameIdentifier:
             if 'subject_id' in result:
                 state = KairosResponse.SUCCESS
                 sid = result['subject_id']
+                os.system('say "%s identified"' % (sid))
             else:
                 state = KairosResponse.UNKNOWN
         else:
