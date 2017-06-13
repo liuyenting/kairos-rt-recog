@@ -135,7 +135,7 @@ class NameIdentifier:
                 if state == KairosResponse.SUCCESS:
                     # send to the signup sheet server
                     response = requests.post(
-                        'http://172.16.217.90/signup.php',
+                        'http://cnlab.csie.org/signup.php',
                         data={'student_id': sid}
                     )
                     sid = '[' + sid + ']'
