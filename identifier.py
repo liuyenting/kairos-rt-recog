@@ -187,7 +187,7 @@ class NameIdentifier:
             if 'subject_id' in result:
                 state = KairosResponse.SUCCESS
                 sid = result['subject_id']
-                os.system('say "%s identified"' % (sid))
+                os.system('say "identified"')
             else:
                 state = KairosResponse.UNKNOWN
         else:
