@@ -140,6 +140,7 @@ class NameIdentifier:
                         data={'student_id': sid}
                     )
                     sid = '[' + sid + ']'
+                    os.system('say "identified"')
                 elif state == KairosResponse.NO_FACE:
                     sid = '<no face>'
                 elif state == KairosResponse.UNKNOWN:
@@ -187,7 +188,6 @@ class NameIdentifier:
             if 'subject_id' in result:
                 state = KairosResponse.SUCCESS
                 sid = result['subject_id']
-                os.system('say "identified"')
             else:
                 state = KairosResponse.UNKNOWN
         else:
