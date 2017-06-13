@@ -28,6 +28,12 @@ class RingBuffer(object):
             else:
                 raise IndexError('Buffer is empty')
 
+    def __iter__(self):
+        return self._buffer.__iter__
+
+    def __next__(self):
+        return self._buffer.__next__
+
     def __len__(self):
             """
             Returns the length of the buffer.
