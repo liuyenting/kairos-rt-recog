@@ -114,7 +114,7 @@ class NameIdentifier:
             histWait = cv2.calcHist([faceWait], [0], None, [256], [0,256])
             histWait = cv2.normalize(histWait).flatten()
             # histogram difference using cross-correlation
-            d = cv2.compareHist(histWait, histIn, cv2.CV_COMP_CORREL)
+            d = cv2.compareHist(histWait, histIn, cv2.cv.CV_COMP_CORREL)
             if d > self._threshold:
                 return True, d
         return False, 0
