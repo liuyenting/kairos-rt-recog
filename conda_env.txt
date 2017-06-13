@@ -1,0 +1,30 @@
+name: cnl
+channels:
+- defaults
+dependencies:
+- freetype=2.5.5=2
+- jbig=2.1=0
+- jpeg=8d=2
+- lcms=1.19=0
+- libpng=1.6.27=0
+- libtiff=4.0.6=2
+- mkl=2017.0.1=0
+- numpy=1.7.1=py27_2
+- olefile=0.44=py27_0
+- opencv=2.4.8=np17py27_2
+- openssl=1.0.2l=0
+- pil=1.1.7=py27_2
+- pillow=3.4.2=py27_0
+- pip=9.0.1=py27_1
+- python=2.7.13=0
+- readline=6.2=2
+- requests=2.14.2=py27_0
+- setuptools=27.2.0=py27_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py27_0
+- xz=5.2.2=1
+- zlib=1.2.8=3
+- pip:
+  - pycodestyle==2.3.1
+prefix: /Users/Andy/miniconda3/envs/cnl
