@@ -81,6 +81,8 @@ class NameIdentifier:
         }
 
         self._buffer = RingBuffer(size=2)
+        # similarity threshold
+        self._threshold = 0.5
         # variable used to indicate if the thread should be stopped
         self._stopped = False
 
@@ -95,7 +97,27 @@ class NameIdentifier:
         """
         Query the student ID for specified face.
         """
-        self._buffer.push(face)
+        result, score = self._isSimilar(face)
+        if not result:
+            self._buffer.push(face)
+        else:
+            print('[DEBUG] similary face detected, score = %.2f' % (score))
+
+    def _isSimilar(self, face):
+        """
+        Compare whether this face is similar to some face in the waiting queue.
+        """
+        histIn = cv2.calcHist([face], [0], None, [256], [0,256])
+        histIn = cv2.normalize(histIn).flatten()
+
+        for faceWait in self._buffer:
+            histWait = cv2.calcHist([faceWait], [0], None, [256], [0,256])
+            histWait = cv2.normalize(histWait).flatten()
+            # histogram difference using cross-correlation
+            d = cv2.compareHist(histWait, histIn, cv2.CV_COMP_CORREL)
+            if d > self._threshold:
+                return True, d
+        return False, 0
 
     def worker(self):
         """
