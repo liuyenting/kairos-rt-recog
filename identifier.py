@@ -82,7 +82,7 @@ class NameIdentifier:
 
         self._buffer = RingBuffer(size=2)
         # similarity threshold
-        self._threshold = 0.5
+        self._threshold = 0.4
         # variable used to indicate if the thread should be stopped
         self._stopped = False
 
