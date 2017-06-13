@@ -117,7 +117,7 @@ class NameIdentifier:
             d = cv2.compareHist(histWait, histIn, cv2.cv.CV_COMP_CORREL)
             if d > self._threshold:
                 return True, d
-            if d > dMax
+            if d > dMax:
                 dMax = d
         return False, dMax
 
