@@ -12,7 +12,15 @@ Use
 ```
 source activate cnl
 ```
-to initiate the Python environment, and
+to initiate the Python environment.
+
+Generate a new credential definition file, 
+```
+cp sample_cred.ini my_cred.ini
+```
+fill the ID and authorization key given by Kairos (after registrate an account on their platform).
+
+Use
 ```
 python demo.py -d
 ```
