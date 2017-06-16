@@ -16,4 +16,4 @@ to initiate the Python environment, and
 ```
 python demo.py -d
 ```
-to start the real-time identification. This is a sub-project of our Computer Network Lab 2017 course, hence the identification result will get piped to a server backend of ours. 
+to start the real-time identification. This is a sub-project of our [Computer Network Lab 2017](http://www.pcs.csie.ntu.edu.tw/course/cnl/2017/) (CSIE3511) course, hence the identification result will get piped to a server backend of ours. 
