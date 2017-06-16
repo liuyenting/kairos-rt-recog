@@ -18,7 +18,7 @@ Generate a new credential definition file,
 ```
 cp sample_cred.ini my_cred.ini
 ```
-fill the _AppId_ and _AppKey_ given by Kairos (after registrate an account on their platform). The _Gallery_ field controls the gallery that contains the enrolled faces for recognition.
+fill the _AppId_ and _AppKey_ given by Kairos (after registrate an account on their platform). The _Gallery_ field controls the gallery that contains the enrolled faces for recognition. Remember to modify ```NameIdentifier``` in the ```demo.py``` to point to your new credential definition file, in this case, it is ```my_cred.ini```.
 
 Use
 ```
