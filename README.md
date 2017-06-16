@@ -18,7 +18,7 @@ Generate a new credential definition file,
 ```
 cp sample_cred.ini my_cred.ini
 ```
-fill the ID and authorization key given by Kairos (after registrate an account on their platform).
+fill the _AppId_ and _AppKey_ given by Kairos (after registrate an account on their platform). The _Gallery_ field controls the gallery that contains the enrolled faces for recognition.
 
 Use
 ```
